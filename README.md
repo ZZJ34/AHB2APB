@@ -32,7 +32,7 @@ description : 实现基本功能
 |pready_x|input 1-bit|APB(AMBA 5)| APB 从设备 ready signal
 |pslverr_x|input 1-bit|APB(AMBA 5)| APB 从设备错误信号
 
-注：x 表示不同的从设备，支持12个从设备
+注：x 表示不同的从设备
 
 注：没有列出且必须要实现的端口按照 AMBA5 协议栈采用默认值
 
@@ -45,5 +45,11 @@ description : 实现基本功能
 - 同步桥设计，时钟来源于 AHB 总线
 
 - 仅支持32位地址总线，32位数据总线
+  
+- 支持12个从设备
+  
+## 仿真测试
+
+执行命令 `bash ./sim/vsim_rtl_bash.sh`
 
  
