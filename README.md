@@ -12,7 +12,7 @@ description : 实现基本功能
 |--|--|--|--
 |hclk|input 1-bit|AHB(AMBA 5)| AHB 所属系统时钟
 |hreset_n|input 1-bit|AHB(AMBA 5)| AHB 所属系统复位 低电平有效
-|haddr|input *HADDR_WIDTH*|AHB(AMBA 5)| AHB 地址总线 32位
+|haddr|input *HADDR_SYS_WIDTH*|AHB(AMBA 5)| AHB 地址总线 32位
 |hwdata|input *AHB_DATA_WIDTH*|AHB(AMBA 5)| AHB 写数据总线
 |hrdata|output *AHB_DATA_WIDTH*|AHB(AMBA 5)| AHB 读数据总线
 |hready|input 1-bit|AHB(AMBA 5)| AHB ready signal 

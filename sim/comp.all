@@ -1,0 +1,6 @@
++incdir+../design
+../design/apb_addr_defines.v
+../design/apb_com_defines.v
+../design/apb_ahb_if.v
+../design/apb_top.v
+

@@ -38,11 +38,12 @@
 `define WRITE        1'b1
 
 // port width
-`define HSIZE_WIDTH    3
-`define HTRANS_WIDTH   2
-`define HBURST_WIDTH   3
-`define HADDR_WIDTH    32                
-`define AHB_DATA_WIDTH 32        
+`define HSIZE_WIDTH        3
+`define HTRANS_WIDTH       2
+`define HBURST_WIDTH       3
+`define HADDR_SYS_WIDTH    32       // AHB system address bus width
+`define HADDR_INT_WIDTH    32       // hardware internal AHB address bus width        
+`define AHB_DATA_WIDTH     32        
 
 /* APB */
 

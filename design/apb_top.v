@@ -8,25 +8,25 @@
 
 module apb_top (
     /* AHB */ 
-    input                        hclk,       // AHB system clock
-    input                        hreset_n,   // AHB system reset
-    input  [`HADDR_WIDTH-1:0]    haddr,      // AHB address bus
-    input                        hready,     // AHB ready signal
-    input                        hsel,       // AHB slave select signal
-    input  [`HTRANS_WIDTH-1:0]   htrans,     // AHB transfer type bus
-    input                        hwrite,     // AHB write signal
-    input  [`HSIZE_WIDTH-1:0]    hsize,      // AHB transfer size
-    input  [`HBURST_WIDTH -1:0]  hburst,     // AHB transfer burst type
-    output                       hresp,      // AHB response
-    output                       hreadyout,  // AHB ready output
-    input  [`AHB_DATA_WIDTH-1:0] hwdata,     // AHB write data bus
-    output [`AHB_DATA_WIDTH-1:0] hrdata,     // AHB read data bus
+    input                         hclk,       // AHB system clock
+    input                         hreset_n,   // AHB system reset
+    input  [`HADDR_SYS_WIDTH-1:0] haddr,      // AHB address bus
+    input                         hready,     // AHB ready signal
+    input                         hsel,       // AHB slave select signal
+    input  [`HTRANS_WIDTH-1:0]    htrans,     // AHB transfer type bus
+    input                         hwrite,     // AHB write/read signal
+    input  [`HSIZE_WIDTH-1:0]     hsize,      // AHB transfer size
+    input  [`HBURST_WIDTH -1:0]   hburst,     // AHB transfer burst type
+    output                        hresp,      // AHB response
+    output                        hreadyout,  // AHB ready output
+    input  [`AHB_DATA_WIDTH-1:0]  hwdata,     // AHB write data bus
+    output [`AHB_DATA_WIDTH-1:0]  hrdata,     // AHB read data bus
     
     /* APB */
-    output                       penable,    // APB enable
-    output [`PADDR_WIDTH-1:0]    paddr;      // APB address bus
-    output                       pwrite,     // APB write
-    output [`APB_DATA_WIDTH-1:0] pwdata,     // APB write data
+    output                        penable,    // APB enable
+    output [`PADDR_WIDTH-1:0]     paddr,      // APB address bus
+    output                        pwrite,     // APB write
+    output [`APB_DATA_WIDTH-1:0]  pwdata,     // APB write data
     // apb slvae_0
     output                       psel_0,     // APB select slave_x
     input  [`APB_DATA_WIDTH-1:0] prdata_0,   // APB read data from slave_x
@@ -89,6 +89,34 @@ module apb_top (
     input                        pslverr_11
 );
 
+/* internal signal and reg */
+// internal AHB address 
+wire [`HADDR_INT_WIDTH-1:0]      haddr_int;
+
+
+// only take the lower 32 bits from system haddr
+assign haddr_int = haddr[`HADDR_INT_WIDTH-1:0];
+
+
+/* module instantiation */
+apb_ahb_if i_apb_ahb_if(
+    .hclk(),       // AHB system clock
+    .hreset_n(),   // AHB system reset
+    .haddr_int(),  // internal AHB address
+    .hready(),     
+    .hsel(),       // AHB slave select
+    .htrans(),     // AHB transfer type 
+    .hwrite(),     // AHB write/read signal
+    .hwdata(),     // AHB write data
+    .hreadyout(),  
+    .hresp(),      // AHB response
+    .pready_x(),   // APB ready from slave_x (optinal for slave)
+    .pslverr_x(),  // APB slave error from slave_x (optinal for slave)
+    .paddr(),      // APB address
+    .penable(),    // APB enable
+    .pwdata(),     // APB write data
+    .pwrite()      // APB write/read signal
+);
 
     
 endmodule
