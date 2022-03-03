@@ -50,3 +50,6 @@
 // port width
 `define PADDR_WIDTH    32
 `define APB_DATA_WIDTH 32
+
+// number of the slaves
+`define NUM_APB_SLAVES 12

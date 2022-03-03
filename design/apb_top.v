@@ -92,30 +92,61 @@ module apb_top (
 /* internal signal and reg */
 // internal AHB address 
 wire [`HADDR_INT_WIDTH-1:0]      haddr_int;
+// internal APB psel
+wire [`NUM_APB_SLAVES-1:0]       pselx_int;
 
 
+
+
+
+/* conenction of the internal signal */
 // only take the lower 32 bits from system haddr
 assign haddr_int = haddr[`HADDR_INT_WIDTH-1:0];
 
+// split out pselx_int to the individual psel signals
+assign psel_0 = pselx_int[0];
+assign psel_1 = pselx_int[1];
+assign psel_2 = pselx_int[2];
+assign psel_3 = pselx_int[3];
+assign psel_4 = pselx_int[4];
+assign psel_5 = pselx_int[5];
+assign psel_6 = pselx_int[6];
+assign psel_7 = pselx_int[7];
+assign psel_8 = pselx_int[8];
+assign psel_9 = pselx_int[9];
+assign psel_10 = pselx_int[10];
+assign psel_11 = pselx_int[11];
+
+
+
+
+
 
 /* module instantiation */
+// AHB slave interface
 apb_ahb_if i_apb_ahb_if(
-    .hclk(),       // AHB system clock
-    .hreset_n(),   // AHB system reset
-    .haddr_int(),  // internal AHB address
-    .hready(),     
-    .hsel(),       // AHB slave select
-    .htrans(),     // AHB transfer type 
-    .hwrite(),     // AHB write/read signal
-    .hwdata(),     // AHB write data
-    .hreadyout(),  
-    .hresp(),      // AHB response
+    .hclk(hclk),           // AHB system clock
+    .hreset_n(hreset_n),   // AHB system reset
+    .haddr_int(haddr_int), // internal AHB address
+    .hready(hready),     
+    .hsel(hsel),           // AHB slave select
+    .htrans(htrans),       // AHB transfer type 
+    .hwrite(hwrite),       // AHB write/read signal
+    .hwdata(hwdata),       // AHB write data
+    .hreadyout(hreadyout),  
+    .hresp(hresp),         // AHB response
     .pready_x(),   // APB ready from slave_x (optinal for slave)
     .pslverr_x(),  // APB slave error from slave_x (optinal for slave)
     .paddr(),      // APB address
     .penable(),    // APB enable
     .pwdata(),     // APB write data
     .pwrite()      // APB write/read signal
+);
+
+// APB address decoder
+apb_addr_dec i_apb_addr_dec(
+    .paddr(),
+    .psel_int(pselx_int)
 );
 
     
