@@ -3,4 +3,5 @@
 ../design/apb_com_defines.v
 ../design/apb_ahb_if.v
 ../design/apb_top.v
+../design/apb_mux.v
 

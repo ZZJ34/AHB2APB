@@ -93,7 +93,7 @@ module apb_top (
 // internal AHB address 
 wire [`HADDR_INT_WIDTH-1:0]      haddr_int;
 // internal APB psel
-wire [`NUM_APB_SLAVES-1:0]       pselx_int;
+wire [`NUM_APB_SLAVES-1:0]       psel_int;
 
 
 
@@ -104,18 +104,18 @@ wire [`NUM_APB_SLAVES-1:0]       pselx_int;
 assign haddr_int = haddr[`HADDR_INT_WIDTH-1:0];
 
 // split out pselx_int to the individual psel signals
-assign psel_0 = pselx_int[0];
-assign psel_1 = pselx_int[1];
-assign psel_2 = pselx_int[2];
-assign psel_3 = pselx_int[3];
-assign psel_4 = pselx_int[4];
-assign psel_5 = pselx_int[5];
-assign psel_6 = pselx_int[6];
-assign psel_7 = pselx_int[7];
-assign psel_8 = pselx_int[8];
-assign psel_9 = pselx_int[9];
-assign psel_10 = pselx_int[10];
-assign psel_11 = pselx_int[11];
+assign psel_0 = psel_int[0];
+assign psel_1 = psel_int[1];
+assign psel_2 = psel_int[2];
+assign psel_3 = psel_int[3];
+assign psel_4 = psel_int[4];
+assign psel_5 = psel_int[5];
+assign psel_6 = psel_int[6];
+assign psel_7 = psel_int[7];
+assign psel_8 = psel_int[8];
+assign psel_9 = psel_int[9];
+assign psel_10 = psel_int[10];
+assign psel_11 = psel_int[11];
 
 
 
@@ -124,7 +124,7 @@ assign psel_11 = pselx_int[11];
 
 /* module instantiation */
 // AHB slave interface
-apb_ahb_if i_apb_ahb_if(
+apb_ahb_if i_apb_ahb_if (
     .hclk(hclk),           // AHB system clock
     .hreset_n(hreset_n),   // AHB system reset
     .haddr_int(haddr_int), // internal AHB address
@@ -144,10 +144,63 @@ apb_ahb_if i_apb_ahb_if(
 );
 
 // APB address decoder
-apb_addr_dec i_apb_addr_dec(
+apb_addr_dec i_apb_addr_dec (
     .paddr(),
-    .psel_int(pselx_int)
+    .psel_int(psel_int)    // internal APB psel
 );
 
+// select APB slave prdata
+apb_mux #(.DATA_WIDTH(`APB_DATA_WIDTH)) i_apb_mux_prdata (
+    .sel(psel_int),    // internal APB psel
+    .ch_0(prdata_0),   // read data from APB slave #0 
+    .ch_1(prdata_1),   // read data from APB slave #1
+    .ch_2(prdata_2),   // read data from APB slave #2
+    .ch_3(prdata_3),   // read data from APB slave #3
+    .ch_4(prdata_4),   // read data from APB slave #4
+    .ch_5(prdata_5),   // read data from APB slave #5
+    .ch_6(prdata_6),   // read data from APB slave #6
+    .ch_7(prdata_7),   // read data from APB slave #7
+    .ch_8(prdata_8),   // read data from APB slave #8
+    .ch_9(prdata_9),   // read data from APB slave #9
+    .ch_10(prdata_10), // read data from APB slave #10
+    .ch_11(prdata_11), // read data from APB slave #11
+    .tc_ch()
+);
+
+// select APB slave pready
+apb_mux #(.DATA_WIDTH(1)) i_apb_mux_pready (
+    .sel(psel_int),    // internal APB psel
+    .ch_0(pready_0),   // ready from APB slave #0 
+    .ch_1(pready_1),   // ready data from APB slave #1
+    .ch_2(pready_2),   // ready data from APB slave #2
+    .ch_3(pready_3),   // ready data from APB slave #3
+    .ch_4(pready_4),   // ready data from APB slave #4
+    .ch_5(pready_5),   // ready data from APB slave #5
+    .ch_6(pready_6),   // ready data from APB slave #6
+    .ch_7(pready_7),   // ready data from APB slave #7
+    .ch_8(pready_8),   // ready data from APB slave #8
+    .ch_9(pready_9),   // ready data from APB slave #9
+    .ch_10(pready_10), // ready data from APB slave #10
+    .ch_11(pready_11), // ready data from APB slave #11
+    .tc_ch()
+);
+
+// select APB slave pslverr
+apb_mux #(.DATA_WIDTH(1)) i_apb_mux_pslverr (
+    .sel(psel_int),    // internal APB psel
+    .ch_0(pslverr_0),   // pslverr from APB slave #0 
+    .ch_1(pslverr_1),   // pslverr from APB slave #1
+    .ch_2(pslverr_2),   // pslverr from APB slave #2
+    .ch_3(pslverr_3),   // pslverr from APB slave #3
+    .ch_4(pslverr_4),   // pslverr from APB slave #4
+    .ch_5(pslverr_5),   // pslverr from APB slave #5
+    .ch_6(pslverr_6),   // pslverr from APB slave #6
+    .ch_7(pslverr_7),   // pslverr from APB slave #7
+    .ch_8(pslverr_8),   // pslverr from APB slave #8
+    .ch_9(pslverr_9),   // pslverr from APB slave #9
+    .ch_10(pslverr_10), // pslverr from APB slave #10
+    .ch_11(pslverr_11), // pslverr from APB slave #11
+    .tc_ch()
+);
     
 endmodule
