@@ -28,4 +28,15 @@ module apb_ahb_if (
     output                         pwrite      // APB write/read signal
 );
 
+/* output signal and reg */
+
+/* internal signal and reg */
+
+/* FSM definition */
+
+/* connection */
+
+/* always block */
+
+
 endmodule
