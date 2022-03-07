@@ -15,8 +15,8 @@ module apb_top (
     input                         hsel,       // AHB slave select signal
     input  [`HTRANS_WIDTH-1:0]    htrans,     // AHB transfer type bus
     input                         hwrite,     // AHB write/read signal
-    input  [`HSIZE_WIDTH-1:0]     hsize,      // AHB transfer size
-    input  [`HBURST_WIDTH -1:0]   hburst,     // AHB transfer burst type
+    input  [`HSIZE_WIDTH-1:0]     hsize,      // AHB transfer size        // 没用
+    input  [`HBURST_WIDTH -1:0]   hburst,     // AHB transfer burst type  // 没用
     output                        hresp,      // AHB response
     output                        hreadyout,  // AHB ready output
     input  [`AHB_DATA_WIDTH-1:0]  hwdata,     // AHB write data bus
@@ -94,6 +94,10 @@ module apb_top (
 wire [`HADDR_INT_WIDTH-1:0]      haddr_int;
 // internal APB psel
 wire [`NUM_APB_SLAVES-1:0]       psel_int;
+// APB psel output
+wire [`NUM_APB_SLAVES-1:0]       psel_apb;
+// APB psel enable
+wire                             psel_en;
 
 
 
@@ -104,19 +108,18 @@ wire [`NUM_APB_SLAVES-1:0]       psel_int;
 assign haddr_int = haddr[`HADDR_INT_WIDTH-1:0];
 
 // split out pselx_int to the individual psel signals
-assign psel_0 = psel_int[0];
-assign psel_1 = psel_int[1];
-assign psel_2 = psel_int[2];
-assign psel_3 = psel_int[3];
-assign psel_4 = psel_int[4];
-assign psel_5 = psel_int[5];
-assign psel_6 = psel_int[6];
-assign psel_7 = psel_int[7];
-assign psel_8 = psel_int[8];
-assign psel_9 = psel_int[9];
-assign psel_10 = psel_int[10];
-assign psel_11 = psel_int[11];
-
+assign psel_0 = psel_apb[0];
+assign psel_1 = psel_apb[1];
+assign psel_2 = psel_apb[2];
+assign psel_3 = psel_apb[3];
+assign psel_4 = psel_apb[4];
+assign psel_5 = psel_apb[5];
+assign psel_6 = psel_apb[6];
+assign psel_7 = psel_apb[7];
+assign psel_8 = psel_apb[8];
+assign psel_9 = psel_apb[9];
+assign psel_10 = psel_apb[10];
+assign psel_11 = psel_apb[11];
 
 
 
@@ -135,18 +138,26 @@ apb_ahb_if i_apb_ahb_if (
     .hwdata(hwdata),       // AHB write data
     .hreadyout(hreadyout),  
     .hresp(hresp),         // AHB response
-    .pready_x(),   // APB ready from slave_x (optinal for slave)
-    .pslverr_x(),  // APB slave error from slave_x (optinal for slave)
-    .paddr(),      // APB address
-    .penable(),    // APB enable
-    .pwdata(),     // APB write data
-    .pwrite()      // APB write/read signal
+    .pready_x(),           // APB ready from slave_x (optinal for slave)
+    .pslverr_x(),          // APB slave error from slave_x (optinal for slave)
+    .psel_en(psel_en),     // APB psel enable
+    .paddr(),              // APB address
+    .penable(),            // APB enable
+    .pwdata(),             // APB write data
+    .pwrite()              // APB write/read signal
 );
 
 // APB address decoder
 apb_addr_dec i_apb_addr_dec (
     .paddr(),
     .psel_int(psel_int)    // internal APB psel
+);
+
+// APB slave psel
+apb_psel i_apb_psel (
+    .psel_en(psel_en),
+    .psel_int(psel_int),
+    .psel_apb(psel_apb)
 );
 
 // select APB slave prdata

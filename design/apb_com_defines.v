@@ -28,10 +28,10 @@
 `define ERROR        1'b1
 
 // HTRANS values
-`define IDLE         1'b00      // indicates that no data transfer is required
-`define BUSY         1'b01      // indicates that the Manager is continuing with a burst but the next transfer cannot take place immediately
-`define NONSEQ       1'b10      // Indicates a single transfer or the first transfer of a burst
-`define SEQ          1'b11      // the remaining transfers in a burst are SEQUENTIAL and the address is related to the previous transfer
+`define IDLE         2'b00      // indicates that no data transfer is required
+`define BUSY         2'b01      // indicates that the Manager is continuing with a burst but the next transfer cannot take place immediately
+`define NONSEQ       2'b10      // Indicates a single transfer or the first transfer of a burst
+`define SEQ          2'b11      // the remaining transfers in a burst are SEQUENTIAL and the address is related to the previous transfer
 
 // HWRITE/PWRITE values
 `define READ         1'b0
