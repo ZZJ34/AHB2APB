@@ -4,3 +4,4 @@
 # 忽略所有的 word 文件
 *.doc
 *.docx
+*.tmp
