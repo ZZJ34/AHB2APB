@@ -107,7 +107,7 @@ end
  * 保存 AHB 的传输方向
  * 
  * 因为 AHB 的流水操作，传输方向的指明和地址保持同步，
- * 因此，传输方向和地址有着一致的采样时刻
+ * 因此，传输方向和地址有着一致的采样时刻。 
  */
 assign piped_hwrite_w = piped_hwrite;
 always @(posedge hclk) begin
@@ -131,7 +131,7 @@ end
  * 保存 AHB 总线上的写数据
  *
  * 对于写入传输事务，只有得到完全的 AHB 总线信息(地址和数据)，
- * 才能在进入 APB 的 Setup 阶段
+ * 才能在进入 APB 的 Setup 阶段。
  */
 assign piped_hwdata_w = piped_hwdata;
 always @(posedge hclk) begin
@@ -148,7 +148,7 @@ end
 
 
 /* 
- * 状态机的切换
+ * 状态机切换
  */
 always @(posedge hclk) begin
     if (hreset_n == 1'b0) begin
