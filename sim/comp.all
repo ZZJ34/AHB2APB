@@ -2,6 +2,11 @@
 ../design/apb_addr_defines.v
 ../design/apb_com_defines.v
 ../design/apb_ahb_if.v
-../design/apb_top.v
 ../design/apb_mux.v
+../design/apb_addr_dec.v
+../design/apb_psel.v
+../design/apb_top.v
+./apb_if.sv
+./apb_top_wrapped.sv
+./test_bench.sv
 

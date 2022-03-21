@@ -7,9 +7,9 @@
 // ====================================================================
 
 module apb_psel (
-    input                            psel_en;
-    input      [`NUM_APB_SLAVES-1:0] psel_int;
-    output reg [`NUM_APB_SLAVES-1:0] psel_apb;
+    input                            psel_en,
+    input      [`NUM_APB_SLAVES-1:0] psel_int,
+    output reg [`NUM_APB_SLAVES-1:0] psel_apb
 );
 
 always @(psel_int or psel_en) begin
