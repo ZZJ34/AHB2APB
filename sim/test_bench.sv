@@ -9,7 +9,7 @@
 module test_bench();
 
 parameter PERIOD_CYCLE = 20 ;  // 20ns 50Mhz
-parameter DELAY_CYCLE  = 200;  // 200ns
+parameter DELAY_CYCLE  = 205;  // 205ns
 
 // global signal
 logic clk;

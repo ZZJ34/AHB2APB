@@ -44,24 +44,31 @@ wire [`PADDR_WIDTH-1:0]     paddr_w;
 wire [`APB_DATA_WIDTH-1:0]  pwdata_w;       
 wire                        pwrite_w;
 
-
-reg [2:0]                   nextstate;        // 下一状态寄存器
-reg [2:0]                   state;            // 当前状态寄存器
-
 reg [`HADDR_INT_WIDTH-1:0]  piped_haddr;      // 存储 AHB 地址
 reg [`AHB_DATA_WIDTH-1:0]   piped_hwdata;     // 存储 AHB 写数据
 reg                         piped_hwrite;     // 存储 AHB 的传输方向
 
 
 
+reg [3:0]                   nextstate;        // 下一状态寄存器
+reg [3:0]                   state;            // 当前状态寄存器
 
 /* FSM definition */
-parameter IDLE                = 3'b000;
-parameter WRITE_WAIT_PIPLINE  = 3'b001;
-parameter WRITE_SETUP         = 3'b010;
-parameter READ_SETUP          = 3'b011; 
-
-
+parameter IDLE                = 4'b0000;
+// write state
+parameter WRITE_WAIT_PIPLINE  = 4'b0001;
+parameter WRITE_SETUP         = 4'b0010;
+parameter WRITE_ENABLE        = 4'b0011;
+parameter WRITE_WAIT          = 4'b0100;
+parameter WRITE_SUCCESS       = 4'b0101;
+// read state
+parameter READ_SETUP          = 4'b0110;
+parameter READ_ENABLE         = 4'b0111;
+parameter READ_WAIT           = 4'b1000;  
+parameter READ_SUCCESS        = 4'b1001;
+// error state
+parameter ERROR_1             = 4'b1010;
+parameter ERROR_2             = 4'b1011;
 
 
 
@@ -161,32 +168,101 @@ end
 
 always @(*) begin
     case (state)
-        //
-        // 总线上有一些传输事务需要接受或拒绝，
-        // 如果接受，则需要决定读取或写入。 
-        // 如果是写入事务，需要等待地址和数据都就位
-        // 如果是读取事务，仅需要等待地址就位
-        //
+        // 空闲状态，等待 AHB 总线唤醒
         IDLE : begin
             if (ahb_valid == 1'b1) begin
                 // 接受当前的传输事务
-                if ( hwrite == 1'b1) begin
+                if ( hwrite == 1'b1)
                     // 写入传输事务
-                    nextstate = WRITE_WAIT_PIPLINE; // 进入下一个状态等待写数据
-                end
-                else begin
+                    nextstate = WRITE_WAIT_PIPLINE; 
+                else
                     // 读取传输事务
                     nextstate = READ_SETUP;
-                end
+            end
+            else
+                nextstate = IDLE;
+        end
+
+        // 写传输（等待数据），获取 AHB 写事务的数据后 APB 总线进入到 setup phase
+        WRITE_WAIT_PIPLINE : nextstate = WRITE_SETUP;
+
+        // APB 总线写 setup phase
+        WRITE_SETUP : nextstate = WRITE_ENABLE;
+    
+        // APB 总线写 enable phase
+        WRITE_ENABLE : begin
+            if (pready_x == 1'b0)
+                // APB 从设备未准备 
+                nextstate = WRITE_WAIT;
+            else begin
+                if (pslverr_x == 1'b0)
+                    nextstate = WRITE_SUCCESS;
+                else
+                    nextstate = ERROR_1;
             end
         end
 
-        //
-        // 获取写数据，进入到 APB 写入传输的 Setup 阶段
-        //
-        WRITE_WAIT_PIPLINE : begin
-            nextstate = WRITE_SETUP;
+        // APB 总线写等待
+        WRITE_WAIT : begin
+            if (pready_x == 1'b0)
+                // APB 从设备未准备 
+                nextstate = WRITE_WAIT;
+            else begin
+                if (pslverr_x == 1'b0)
+                    nextstate = WRITE_SUCCESS;
+                else
+                    nextstate = ERROR_1;
+            end
         end
+
+        // APB 总线写完成
+        WRITE_SUCCESS : begin
+            if (ahb_valid == 1'b1)
+                nextstate = WRITE_WAIT_PIPLINE;
+            else
+                nextstate = IDLE;
+        end
+
+        // APB 总线读 setup phase
+        READ_SETUP : nextstate = READ_ENABLE;
+
+        // APB 总线读 enable phase
+        READ_ENABLE : begin
+            if (pready_x == 1'b0)
+                // APB 从设备未准备 
+                nextstate = READ_WAIT;
+            else begin
+                if (pslverr_x == 1'b0)
+                    nextstate = READ_SUCCESS;
+                else
+                    nextstate = ERROR_1;
+            end
+        end
+
+        // APB 总线读等待
+        READ_WAIT : begin
+            if (pready_x == 1'b0)
+                // APB 从设备未准备 
+                nextstate = READ_WAIT;
+            else begin
+                if (pslverr_x == 1'b0)
+                    nextstate = READ_SUCCESS;
+                else
+                    nextstate = ERROR_1;
+            end
+        end
+
+        // APB 总线读完成
+        READ_SUCCESS : begin
+            if (ahb_valid == 1'b1)
+                nextstate = READ_SETUP;
+            else
+                nextstate = IDLE;
+        end
+
+        ERROR_1 : nextstate = ERROR_2;
+
+        ERROR_2 : nextstate = IDLE;
 
         default : nextstate = IDLE;
     endcase
