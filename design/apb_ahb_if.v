@@ -40,6 +40,7 @@ wire [`HADDR_INT_WIDTH-1:0] piped_haddr_w;
 wire [`AHB_DATA_WIDTH-1:0]  piped_hwdata_w;
 wire                        piped_hwrite_w;
 
+wire                        psel_en_w;
 wire [`PADDR_WIDTH-1:0]     paddr_w;
 wire [`APB_DATA_WIDTH-1:0]  pwdata_w;       
 wire                        pwrite_w;
@@ -50,7 +51,7 @@ reg                         piped_hwrite;     // 存储 AHB 的传输方向
 
 
 
-reg [3:0]                   next_state;        // 下一状态寄存器
+reg [3:0]                   next_state;       // 下一状态寄存器
 reg [3:0]                   state;            // 当前状态寄存器
 
 /* FSM definition */
@@ -176,6 +177,22 @@ always @(posedge hclk) begin
         case (next_state)
             ERROR_1, ERROR_2 : hresp <= 1'b1;
             default: hresp <= 1'b0;
+        endcase
+    end
+end
+
+/*
+* APB 总线 psel_en
+*/
+assign psel_en_w = psel_en;
+always @(posedge hclk) begin
+    if (hreset_n == 1'b0)
+        psel_en <= 1'b0;
+    else begin
+        case(next_state):
+        WRITE_SETUP, READ_SETUP : psel_en <= 1'b1;
+        WRITE_SUCCESS, READ_SUCCESS, ERROR_1 : psel_en <= 1'b0;
+        default: psel_en <= psel_en_w;
         endcase
     end
 end
