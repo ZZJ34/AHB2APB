@@ -189,9 +189,9 @@ always @(posedge hclk) begin
     if (hreset_n == 1'b0)
         psel_en <= 1'b0;
     else begin
-        case(next_state):
-        WRITE_SETUP, READ_SETUP : psel_en <= 1'b1;
-        WRITE_SUCCESS, READ_SUCCESS, ERROR_1 : psel_en <= 1'b0;
+        case(next_state)
+            WRITE_SETUP, READ_SETUP : psel_en <= 1'b1;
+            WRITE_SUCCESS, READ_SUCCESS, ERROR_1 : psel_en <= 1'b0;
         default: psel_en <= psel_en_w;
         endcase
     end
