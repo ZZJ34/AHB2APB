@@ -1,6 +1,7 @@
 # 忽略测试工程文件
 /sim/work/*
 modelsim.ini
+transcript
 
 # 忽略所有的 word 文件
 *.doc
