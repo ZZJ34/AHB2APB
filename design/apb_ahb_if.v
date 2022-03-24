@@ -41,14 +41,11 @@ wire [`AHB_DATA_WIDTH-1:0]  piped_hwdata_w;
 wire                        piped_hwrite_w;
 
 wire                        psel_en_w;
-wire [`PADDR_WIDTH-1:0]     paddr_w;
-wire [`APB_DATA_WIDTH-1:0]  pwdata_w;       
-wire                        pwrite_w;
+wire                        penable_w;
 
 reg [`HADDR_INT_WIDTH-1:0]  piped_haddr;      // 存储 AHB 地址
 reg [`AHB_DATA_WIDTH-1:0]   piped_hwdata;     // 存储 AHB 写数据
 reg                         piped_hwrite;     // 存储 AHB 的传输方向
-
 
 
 reg [3:0]                   next_state;       // 下一状态寄存器
@@ -183,6 +180,8 @@ end
 
 /*
 * APB 总线 psel_en
+* 
+* APB 总线 setup phase 开始拉高，完成时拉低
 */
 assign psel_en_w = psel_en;
 always @(posedge hclk) begin
@@ -192,12 +191,37 @@ always @(posedge hclk) begin
         case(next_state)
             WRITE_SETUP, READ_SETUP : psel_en <= 1'b1;
             WRITE_SUCCESS, READ_SUCCESS, ERROR_1 : psel_en <= 1'b0;
-        default: psel_en <= psel_en_w;
+            default: psel_en <= psel_en_w;
         endcase
     end
 end
 
+/*
+* APB 总线 penable
+* 
+* APB 总线 access phase 开始拉高，完成时拉低
+*/
+assign penable_w = penable;
+always @(posedge hclk) begin
+    if (hreset_n == 1'b0)
+        penable <= 1'b0;
+    else begin
+        case(next_state)
+            WRITE_ENABLE, READ_SETUP : penable <= 1'b1;
+            WRITE_SUCCESS, READ_SUCCESS, ERROR_1 : penable <= 1'b0;
+            default: penable <= penable_w;
+        endcase
+    end
+end
 
+/*
+* APB 总线 paddr，pwdata，pwrite
+*/
+always @(*) begin
+    paddr = piped_haddr_w;
+    pwdata = piped_hwdata_w;
+    pwrite = piped_hwrite_w;
+end
 
 
 /* 
