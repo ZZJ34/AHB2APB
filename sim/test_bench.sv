@@ -35,5 +35,10 @@ initial begin
     # DELAY_CYCLE
     rst_n = 1;
 end
+
+initial begin
+    #1000
+    $finish;
+end
     
 endmodule
