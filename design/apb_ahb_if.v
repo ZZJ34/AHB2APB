@@ -19,10 +19,12 @@ module apb_ahb_if (
     
     output reg                       hreadyout,  
     output reg                       hresp,      // AHB response
+    output reg [`AHB_DATA_WIDTH-1:0] hrdata,    
     
     /* APB */
     input                            pready_x,   // APB ready from slave_x (optinal for slave)
     input                            pslverr_x,  // APB slave error from slave_x (optinal for slave)
+    input  [`APB_DATA_WIDTH-1:0]     prdata_x,   // APB read data from slave_x
     output reg                       psel_en,    // APB psel enable
     output reg [`PADDR_WIDTH-1:0]    paddr,      // APB address
     output reg                       penable,    // APB enable
@@ -43,9 +45,13 @@ wire                        piped_hwrite_w;
 wire                        psel_en_w;
 wire                        penable_w;
 
+wire [`AHB_DATA_WIDTH-1:0]  prdata_reg_w;
+
 reg [`HADDR_INT_WIDTH-1:0]  piped_haddr;      // 存储 AHB 地址
 reg [`AHB_DATA_WIDTH-1:0]   piped_hwdata;     // 存储 AHB 写数据
-reg                         piped_hwrite;     // 存储 AHB 的传输方向
+reg                         piped_hwrite;     // 存储 AHB 传输方向
+ 
+reg [`AHB_DATA_WIDTH-1:0]   prdata_reg;       // 存储 APB 读取数据
 
 
 reg [3:0]                   next_state;       // 下一状态寄存器
@@ -179,6 +185,13 @@ always @(posedge hclk) begin
 end
 
 /*
+* AHB 总线 hrdata
+*/
+always @(*) begin
+    hrdata = prdata_reg_w;
+end
+
+/*
 * APB 总线 psel_en
 * 
 * APB 总线 setup phase 开始拉高，完成时拉低
@@ -212,6 +225,21 @@ always @(posedge hclk) begin
             default: penable <= penable_w;
         endcase
     end
+end
+
+/*
+* APB 总线 prdata
+*/
+assign prdata_reg_w = prdata_reg;
+always @(posedge hclk) begin
+    if (hreset_n == 1'b0)
+        prdata_reg <= {`AHB_DATA_WIDTH{1'b0}};
+    else begin
+        if (pready_x == 1'b1)
+            prdata_reg <= prdata_x;
+        else
+            prdata_reg <= prdata_reg_w;
+    end        
 end
 
 /*
