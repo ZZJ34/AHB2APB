@@ -127,10 +127,6 @@ assign psel_9 = psel_apb[9];
 assign psel_10 = psel_apb[10];
 assign psel_11 = psel_apb[11];
 
-
-
-
-
 /* module instantiation */
 // AHB slave interface
 apb_ahb_if i_apb_ahb_if (
