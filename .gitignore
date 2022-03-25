@@ -2,6 +2,7 @@
 /sim/work/*
 modelsim.ini
 transcript
+vsim.wlf
 
 # 忽略所有的 word 文件
 *.doc
