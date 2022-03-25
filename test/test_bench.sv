@@ -6,6 +6,12 @@
 // V0 date:xxx Initial version， zhaozj34@sjtu.edu.cn
 // ====================================================================
 
+`timescale 1ns / 1ps
+
+`include "./ahb2apb_defines.v"
+`include "./apb_if.sv"
+`include "./apb_top_wrapped.sv"
+
 module test_bench();
 
 parameter PERIOD_CYCLE = 20 ;  // 20ns 50Mhz
@@ -36,8 +42,19 @@ initial begin
     rst_n = 1;
 end
 
+string name;
+
+`include "./tasks/basic_tasks.sv"
+
 initial begin
-    #1000
+    #500
+    
+    
+    name = "trying";
+    display_name();
+    transfer_AHB_trans();
+
+
     $finish;
 end
     

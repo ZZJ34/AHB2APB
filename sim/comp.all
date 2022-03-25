@@ -6,9 +6,6 @@
 ../design/apb_addr_dec.v
 ../design/apb_psel.v
 ../design/apb_top.v
-./apb_if.sv          
-./apb_top_wrapped.sv
-./timescale_par.sv
-./task_par.sv 
+
 
 

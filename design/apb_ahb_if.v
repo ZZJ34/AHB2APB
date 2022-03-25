@@ -155,14 +155,14 @@ end
 /*
 * AHB 总线 hreadyout
 *
-* 仅在读写成功完成以及错误响应的第二个周期拉高
+* IDLE状态拉高，此外仅在读写成功完成以及错误响应的第二个周期拉高
 */
 always @(posedge hclk) begin
     if (hreset_n == 1'b0)
-        hreadyout <= 1'b0;
+        hreadyout <= 1'b1;
     else begin
         case (next_state)
-            WRITE_SUCCESS, READ_SUCCESS, ERROR_2 : hreadyout <= 1'b1;
+            IDLE, WRITE_SUCCESS, READ_SUCCESS, ERROR_2 : hreadyout <= 1'b1;
             default: hreadyout <= 1'b0;
         endcase
     end

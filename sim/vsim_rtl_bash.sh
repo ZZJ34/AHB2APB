@@ -5,5 +5,6 @@ if [ ! -e work ];then
 fi
 
 vmap work work 
-vlog -f comp.all test_bench.sv
+vlog -f comp.all
+vlog ../test/test_bench.sv
 vsim -onfinish stop -novopt -do "do wave.do;run -all" test_bench
