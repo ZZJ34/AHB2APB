@@ -42,18 +42,12 @@ initial begin
     rst_n = 1;
 end
 
-string name;
-
-`include "./tasks/basic_tasks.sv"
+`include "./tasks.sv"
 
 initial begin
-    #500
-    
-    
-    name = "trying";
-    display_name();
-    transfer_AHB_trans();
+    wait(i_apb_if.hreset_n == 1'b1);
 
+    one_write_trans_defalut();
 
     $finish;
 end

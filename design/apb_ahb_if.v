@@ -175,11 +175,11 @@ end
 */
 always @(posedge hclk) begin
     if (hreset_n == 1'b0)
-        hresp <= 1'b0;
+        hresp <= `OKAY;
     else begin
         case (next_state)
-            ERROR_1, ERROR_2 : hresp <= 1'b1;
-            default: hresp <= 1'b0;
+            ERROR_1, ERROR_2 : hresp <= `ERROR;
+            default: hresp <= `OKAY;
         endcase
     end
 end
@@ -270,7 +270,7 @@ always @(*) begin
         IDLE : begin
             if (ahb_valid == 1'b1) begin
                 // 接受当前的传输事务
-                if ( hwrite == 1'b1)
+                if ( hwrite == `WRITE)
                     // 写入传输事务
                     next_state = WRITE_WAIT_PIPLINE; 
                 else
