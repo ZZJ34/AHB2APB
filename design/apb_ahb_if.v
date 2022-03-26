@@ -220,7 +220,7 @@ always @(posedge hclk) begin
         penable <= 1'b0;
     else begin
         case(next_state)
-            WRITE_ENABLE, READ_SETUP : penable <= 1'b1;
+            WRITE_ENABLE, READ_ENABLE : penable <= 1'b1;
             WRITE_SUCCESS, READ_SUCCESS, ERROR_1 : penable <= 1'b0;
             default: penable <= penable_w;
         endcase

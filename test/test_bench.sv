@@ -47,7 +47,9 @@ end
 initial begin
     wait(i_apb_if.hreset_n == 1'b1);
 
-    one_write_trans_defalut();
+    // one_write_trans_defalut();
+
+    one_read_trans_defalut();
 
     $finish;
 end

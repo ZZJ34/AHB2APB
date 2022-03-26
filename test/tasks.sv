@@ -50,7 +50,7 @@ endtask
 /*
 * name : transfer one write transaction with defalut set
 *
-* description : 
+* description : AHB bus write transaction to APB slave 0 without APB response delay
 * 
 */
 task one_write_trans_defalut();
@@ -92,9 +92,12 @@ task one_write_trans_defalut();
 
         // APB slave 0
         begin
-            @(posedge i_apb_if.hclk)
+            wait(i_apb_if.penable == 1'b1 && i_apb_if.psel_0 == 1'b1)
             i_apb_if.pready_0  = 1'b1;
             i_apb_if.pslverr_0 = 1'b0;
+
+            @(posedge i_apb_if.hclk)
+            i_apb_if.pready_0  = 1'b0;
         end
     join
 
@@ -105,9 +108,56 @@ endtask
 /*
 * name : transfer one read transaction with default set
 *
-* description : 
+* description :  AHB bus read transaction to APB slave 0 without APB response delay
 */
 task one_read_trans_defalut();
+    // TRANS object
+    trans = new(.dir(0), .error(0), .delay(0), .index(0));
+    // TRANS randomize
+    initialize_trans:assert (trans.randomize())
+        else $error("TRANS randomize failed!");
+    display_name("one_read_trans_defalut");
+
+    fork
+        // AHB master 
+        begin
+            // address phase
+            ahb_next();
+            i_apb_if.haddr  = trans.addr;
+            i_apb_if.hwrite = trans.dir;
+    
+            i_apb_if.hready = 1'b1;
+            i_apb_if.hsel   = 1'b1;
+            i_apb_if.htrans = 2'b10;
+            i_apb_if.hsize  = 3'b010;
+            i_apb_if.hburst = 3'b000;
+            
+            // data phase
+            ahb_next();
+            i_apb_if.htrans = 2'b00;
+            
+            // end phase
+            ahb_next();
+            i_apb_if.hready = 1'b0;
+            i_apb_if.hsel   = 1'b0;
+            i_apb_if.htrans = 2'bx;
+            i_apb_if.hsize  = 3'bx;
+            i_apb_if.hburst = 3'bx;
+        end
+
+        // APB slave 0
+        begin
+            wait(i_apb_if.penable == 1'b1 && i_apb_if.psel_0 == 1'b1)
+            i_apb_if.pready_0  = 1'b1;
+            i_apb_if.pslverr_0 = 1'b0;
+            i_apb_if.prdata_0  = trans.data;
+
+            @(posedge i_apb_if.hclk)
+            i_apb_if.pready_0  = 1'b0;
+        end
+    join
+
+    #100;
 endtask
 
 
