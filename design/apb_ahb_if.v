@@ -100,7 +100,7 @@ always @(posedge hclk) begin
     end
     else begin
         case (state)
-            IDLE, WRITE_SUCCESS, READ_SUCCESS : begin
+            IDLE, WRITE_SUCCESS, READ_SUCCESS, ERROR_2 : begin
                 if (ahb_valid == 1'b1)
                     piped_haddr <= haddr_int;
                 else
@@ -123,7 +123,7 @@ always @(posedge hclk) begin
         piped_hwrite <= 1'b0;
     else begin
         case (state)
-            IDLE, WRITE_SUCCESS, READ_SUCCESS : begin
+            IDLE, WRITE_SUCCESS, READ_SUCCESS, ERROR_2 : begin
                 if (ahb_valid == 1'b1) 
                     piped_hwrite <= hwrite;
                 else
@@ -315,8 +315,12 @@ always @(*) begin
 
         // APB 总线写完成
         WRITE_SUCCESS : begin
-            if (ahb_valid == 1'b1)
-                next_state = WRITE_WAIT_PIPLINE;
+            if (ahb_valid == 1'b1) begin
+                if (hwrite == `WRITE)
+                    next_state = WRITE_WAIT_PIPLINE; 
+                else
+                    next_state = READ_SETUP;
+            end
             else
                 next_state = IDLE;
         end
@@ -352,15 +356,28 @@ always @(*) begin
 
         // APB 总线读完成
         READ_SUCCESS : begin
-            if (ahb_valid == 1'b1)
-                next_state = READ_SETUP;
+            if (ahb_valid == 1'b1) begin
+                if (hwrite == `WRITE)
+                    next_state = WRITE_WAIT_PIPLINE; 
+                else
+                    next_state = READ_SETUP;
+            end
             else
                 next_state = IDLE;
         end
 
         ERROR_1 : next_state = ERROR_2;
 
-        ERROR_2 : next_state = IDLE;
+        ERROR_2 : begin
+            if (ahb_valid == 1'b1) begin
+                if (hwrite == `WRITE)
+                    next_state = WRITE_WAIT_PIPLINE; 
+                else
+                    next_state = READ_SETUP;
+            end
+            else
+                next_state = IDLE;
+        end
 
         default : next_state = IDLE;
 
