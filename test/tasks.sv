@@ -156,6 +156,33 @@ task apb_prdata(int index, bit [31:0] value);
         i_apb_if.prdata_11 = value;
 endtask
 
+task apb_wait_psel(int index);
+    if(index == 0)
+        wait(i_apb_if.psel_0 == 1'b1);
+    else if (index == 1)
+        wait(i_apb_if.psel_1 == 1'b1);
+    else if (index == 2)
+        wait(i_apb_if.psel_2 == 1'b1);
+    else if (index == 3)
+        wait(i_apb_if.psel_3 == 1'b1);
+    else if (index == 4)
+        wait(i_apb_if.psel_4 == 1'b1);
+    else if (index == 5)
+        wait(i_apb_if.psel_5 == 1'b1);
+    else if (index == 6)
+        wait(i_apb_if.psel_6 == 1'b1);
+    else if (index == 7)
+        wait(i_apb_if.psel_7 == 1'b1);
+    else if (index == 8)
+        wait(i_apb_if.psel_8 == 1'b1);
+    else if (index == 9)
+        wait(i_apb_if.psel_9 == 1'b1);
+    else if (index == 10)
+        wait(i_apb_if.psel_10 == 1'b1);
+    else if (index == 11)
+        wait(i_apb_if.psel_10 == 1'b1);
+endtask
+
 /*
 * name : transfer one write transaction with defalut set
 *
@@ -197,7 +224,8 @@ task one_write_trans_defalut();
 
         // APB slave 0
         begin
-            wait(i_apb_if.penable == 1'b1 && i_apb_if.psel_0 == 1'b1);
+            apb_wait_psel(0);
+            wait(i_apb_if.penable == 1'b1);
             apb_pready(0, 1);
             apb_pslverr(0, 0);
 
@@ -248,7 +276,8 @@ task one_read_trans_defalut();
 
         // APB slave 0
         begin
-            wait(i_apb_if.penable == 1'b1 && i_apb_if.psel_0 == 1'b1);
+            apb_wait_psel(0);
+            wait(i_apb_if.penable == 1'b1);
             apb_pready(0, 1);
             apb_pslverr(0, 0);
             apb_prdata(0, trans.data);
@@ -273,7 +302,7 @@ task write_trans(int nums, int index, int max_delay);
     // TRANS randomize
     for (int i = 0 ; i < $size(trans_lits) ; i++) begin
         TRANS trans_temp;
-        trans_temp = new(.dir(1), .error(0), .delay({$random()}%(max_delay+1)), .index(index));
+        trans_temp = new(.dir(1), .error({$random()}%2), .delay({$random()}%(max_delay+1)), .index(index));
         initialize_trans:assert (trans_temp.randomize())
             else $error("TRANS randomize failed!");
         trans_lits[i] = trans_temp;
@@ -312,7 +341,8 @@ task write_trans(int nums, int index, int max_delay);
         // APB slave
         begin
             for (int i = 0 ; i < $size(trans_lits) ; i++) begin
-                wait(i_apb_if.penable == 1'b1 && i_apb_if.psel_0 == 1'b1);
+                apb_wait_psel(index);
+                wait(i_apb_if.penable == 1'b1);
 
                 apb_pready(index, 0);
                 apb_pslverr(index, 0);
