@@ -72,14 +72,68 @@ add wave -noupdate -group {APB Slave 4} -label prdata_4 -format Literal -radix h
 add wave -noupdate -group {APB Slave 4} -label pready_4 -format Logic /test_bench/i_apb_if/pready_4
 add wave -noupdate -group {APB Slave 4} -label pslverr_4 -format Logic /test_bench/i_apb_if/pslverr_4
 
-add wave -noupdate -expand -group {APB Slave 5} -label psel_5 -format Logic /test_bench/i_apb_if/psel_5
-add wave -noupdate -expand -group {APB Slave 5} -label penable -format Logic /test_bench/i_apb_if/penable
-add wave -noupdate -expand -group {APB Slave 5} -label pwrite -format Logic /test_bench/i_apb_if/pwrite
-add wave -noupdate -expand -group {APB Slave 5} -label paddr -format Literal -radix hexadecimal /test_bench/i_apb_if/paddr
-add wave -noupdate -expand -group {APB Slave 5} -label pwdata -format Literal -radix hexadecimal /test_bench/i_apb_if/pwdata
-add wave -noupdate -expand -group {APB Slave 5} -label prdata_5 -format Literal -radix hexadecimal /test_bench/i_apb_if/prdata_5
-add wave -noupdate -expand -group {APB Slave 5} -label pready_5 -format Logic /test_bench/i_apb_if/pready_5
-add wave -noupdate -expand -group {APB Slave 5} -label pslverr_5 -format Logic /test_bench/i_apb_if/pslverr_5
+add wave -noupdate -group {APB Slave 5} -label psel_5 -format Logic /test_bench/i_apb_if/psel_5
+add wave -noupdate -group {APB Slave 5} -label penable -format Logic /test_bench/i_apb_if/penable
+add wave -noupdate -group {APB Slave 5} -label pwrite -format Logic /test_bench/i_apb_if/pwrite
+add wave -noupdate -group {APB Slave 5} -label paddr -format Literal -radix hexadecimal /test_bench/i_apb_if/paddr
+add wave -noupdate -group {APB Slave 5} -label pwdata -format Literal -radix hexadecimal /test_bench/i_apb_if/pwdata
+add wave -noupdate -group {APB Slave 5} -label prdata_5 -format Literal -radix hexadecimal /test_bench/i_apb_if/prdata_5
+add wave -noupdate -group {APB Slave 5} -label pready_5 -format Logic /test_bench/i_apb_if/pready_5
+add wave -noupdate -group {APB Slave 5} -label pslverr_5 -format Logic /test_bench/i_apb_if/pslverr_5
+
+add wave -noupdate -group {APB Slave 6} -label psel_6 -format Logic /test_bench/i_apb_if/psel_6
+add wave -noupdate -group {APB Slave 6} -label penable -format Logic /test_bench/i_apb_if/penable
+add wave -noupdate -group {APB Slave 6} -label pwrite -format Logic /test_bench/i_apb_if/pwrite
+add wave -noupdate -group {APB Slave 6} -label paddr -format Literal -radix hexadecimal /test_bench/i_apb_if/paddr
+add wave -noupdate -group {APB Slave 6} -label pwdata -format Literal -radix hexadecimal /test_bench/i_apb_if/pwdata
+add wave -noupdate -group {APB Slave 6} -label prdata_6 -format Literal -radix hexadecimal /test_bench/i_apb_if/prdata_6
+add wave -noupdate -group {APB Slave 6} -label pready_6 -format Logic /test_bench/i_apb_if/pready_6
+add wave -noupdate -group {APB Slave 6} -label pslverr_6 -format Logic /test_bench/i_apb_if/pslverr_6
+
+add wave -noupdate -group {APB Slave 7} -label psel_7 -format Logic /test_bench/i_apb_if/psel_7
+add wave -noupdate -group {APB Slave 7} -label penable -format Logic /test_bench/i_apb_if/penable
+add wave -noupdate -group {APB Slave 7} -label pwrite -format Logic /test_bench/i_apb_if/pwrite
+add wave -noupdate -group {APB Slave 7} -label paddr -format Literal -radix hexadecimal /test_bench/i_apb_if/paddr
+add wave -noupdate -group {APB Slave 7} -label pwdata -format Literal -radix hexadecimal /test_bench/i_apb_if/pwdata
+add wave -noupdate -group {APB Slave 7} -label prdata_7 -format Literal -radix hexadecimal /test_bench/i_apb_if/prdata_7
+add wave -noupdate -group {APB Slave 7} -label pready_7 -format Logic /test_bench/i_apb_if/pready_7
+add wave -noupdate -group {APB Slave 7} -label pslverr_7 -format Logic /test_bench/i_apb_if/pslverr_7
+
+add wave -noupdate -group {APB Slave 8} -label psel_8 -format Logic /test_bench/i_apb_if/psel_8
+add wave -noupdate -group {APB Slave 8} -label penable -format Logic /test_bench/i_apb_if/penable
+add wave -noupdate -group {APB Slave 8} -label pwrite -format Logic /test_bench/i_apb_if/pwrite
+add wave -noupdate -group {APB Slave 8} -label paddr -format Literal -radix hexadecimal /test_bench/i_apb_if/paddr
+add wave -noupdate -group {APB Slave 8} -label pwdata -format Literal -radix hexadecimal /test_bench/i_apb_if/pwdata
+add wave -noupdate -group {APB Slave 8} -label prdata_8 -format Literal -radix hexadecimal /test_bench/i_apb_if/prdata_8
+add wave -noupdate -group {APB Slave 8} -label pready_8 -format Logic /test_bench/i_apb_if/pready_8
+add wave -noupdate -group {APB Slave 8} -label pslverr_8 -format Logic /test_bench/i_apb_if/pslverr_8
+
+add wave -noupdate -group {APB Slave 9} -label psel_9 -format Logic /test_bench/i_apb_if/psel_9
+add wave -noupdate -group {APB Slave 9} -label penable -format Logic /test_bench/i_apb_if/penable
+add wave -noupdate -group {APB Slave 9} -label pwrite -format Logic /test_bench/i_apb_if/pwrite
+add wave -noupdate -group {APB Slave 9} -label paddr -format Literal -radix hexadecimal /test_bench/i_apb_if/paddr
+add wave -noupdate -group {APB Slave 9} -label pwdata -format Literal -radix hexadecimal /test_bench/i_apb_if/pwdata
+add wave -noupdate -group {APB Slave 9} -label prdata_9 -format Literal -radix hexadecimal /test_bench/i_apb_if/prdata_9
+add wave -noupdate -group {APB Slave 9} -label pready_9 -format Logic /test_bench/i_apb_if/pready_9
+add wave -noupdate -group {APB Slave 9} -label pslverr_9 -format Logic /test_bench/i_apb_if/pslverr_9
+
+add wave -noupdate -group {APB Slave 10} -label psel_10 -format Logic /test_bench/i_apb_if/psel_10
+add wave -noupdate -group {APB Slave 10} -label penable -format Logic /test_bench/i_apb_if/penable
+add wave -noupdate -group {APB Slave 10} -label pwrite -format Logic /test_bench/i_apb_if/pwrite
+add wave -noupdate -group {APB Slave 10} -label paddr -format Literal -radix hexadecimal /test_bench/i_apb_if/paddr
+add wave -noupdate -group {APB Slave 10} -label pwdata -format Literal -radix hexadecimal /test_bench/i_apb_if/pwdata
+add wave -noupdate -group {APB Slave 10} -label prdata_10 -format Literal -radix hexadecimal /test_bench/i_apb_if/prdata_10
+add wave -noupdate -group {APB Slave 10} -label pready_10 -format Logic /test_bench/i_apb_if/pready_10
+add wave -noupdate -group {APB Slave 10} -label pslverr_10 -format Logic /test_bench/i_apb_if/pslverr_10
+
+add wave -noupdate -expand -group {APB Slave 11} -label psel_11 -format Logic /test_bench/i_apb_if/psel_11
+add wave -noupdate -expand -group {APB Slave 11} -label penable -format Logic /test_bench/i_apb_if/penable
+add wave -noupdate -expand -group {APB Slave 11} -label pwrite -format Logic /test_bench/i_apb_if/pwrite
+add wave -noupdate -expand -group {APB Slave 11} -label paddr -format Literal -radix hexadecimal /test_bench/i_apb_if/paddr
+add wave -noupdate -expand -group {APB Slave 11} -label pwdata -format Literal -radix hexadecimal /test_bench/i_apb_if/pwdata
+add wave -noupdate -expand -group {APB Slave 11} -label prdata_11 -format Literal -radix hexadecimal /test_bench/i_apb_if/prdata_11
+add wave -noupdate -expand -group {APB Slave 11} -label pready_11 -format Logic /test_bench/i_apb_if/pready_11
+add wave -noupdate -expand -group {APB Slave 11} -label pslverr_11 -format Logic /test_bench/i_apb_if/pslverr_11
 
 TreeUpdate [SetDefaultTree]
 configure wave -namecolwidth 169

@@ -180,7 +180,7 @@ task apb_wait_psel(int index);
     else if (index == 10)
         wait(i_apb_if.psel_10 == 1'b1);
     else if (index == 11)
-        wait(i_apb_if.psel_10 == 1'b1);
+        wait(i_apb_if.psel_11 == 1'b1);
 endtask
 
 /*

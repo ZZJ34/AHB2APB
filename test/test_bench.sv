@@ -51,7 +51,7 @@ initial begin
 
     // one_read_trans_defalut();
 
-    write_trans(.nums(5), .index(5), .max_delay(3));
+    write_trans(.nums(5), .index(11), .max_delay(3));
 
     $finish;
 end
