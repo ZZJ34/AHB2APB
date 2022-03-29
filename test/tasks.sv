@@ -44,6 +44,7 @@ class TRANS;
         s={s,$sformatf("=======================================================\n")};
         $display("%s",s);
     endfunction
+
 endclass
 
 TRANS trans;
@@ -383,5 +384,60 @@ task read_trans(int nums, int index, int max_delay);
         initialize_trans:assert (trans_temp.randomize())
             else $error("TRANS randomize failed!");
         trans_lits[i] = trans_temp;
+
+        $display("%d",i);
+        trans_lits[i].display();
     end
+
+    display_name("read_trans");
+
+    fork
+        // AHB master 
+        begin
+            ahb_begin();
+
+            for (int i = 0 ; i < $size(trans_lits) ; i++) begin
+                ahb_next();
+                i_apb_if.haddr  = trans_lits[i].addr;
+                i_apb_if.hwrite = trans_lits[i].dir;
+                i_apb_if.htrans = 2'b10;
+            end
+
+            ahb_next();
+            i_apb_if.htrans = 2'b00;
+
+            ahb_next();
+            i_apb_if.htrans = 2'bx;
+
+            ahb_end();
+        end
+
+        // APB slave
+        begin
+            for (int i = 0 ; i < $size(trans_lits) ; i++) begin
+                apb_wait_psel(index);
+                wait(i_apb_if.penable == 1'b1);
+
+                apb_pready(index, 0);
+                apb_pslverr(index, 0);
+
+                repeat(trans_lits[i].delay) begin
+                    @(posedge i_apb_if.hclk);
+                end
+
+                apb_pready(index, 1);
+                apb_pslverr(index, trans_lits[i].error);
+                apb_prdata(index, trans_lits[i].data);
+            
+                @(posedge i_apb_if.hclk);
+                apb_pready(index, 0);
+                apb_pslverr(index, 0);
+
+                @(posedge i_apb_if.hclk);
+            end
+        end
+
+    join
+
+    #100;
 endtask

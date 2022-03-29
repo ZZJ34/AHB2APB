@@ -126,14 +126,14 @@ add wave -noupdate -group {APB Slave 10} -label prdata_10 -format Literal -radix
 add wave -noupdate -group {APB Slave 10} -label pready_10 -format Logic /test_bench/i_apb_if/pready_10
 add wave -noupdate -group {APB Slave 10} -label pslverr_10 -format Logic /test_bench/i_apb_if/pslverr_10
 
-add wave -noupdate -expand -group {APB Slave 11} -label psel_11 -format Logic /test_bench/i_apb_if/psel_11
-add wave -noupdate -expand -group {APB Slave 11} -label penable -format Logic /test_bench/i_apb_if/penable
-add wave -noupdate -expand -group {APB Slave 11} -label pwrite -format Logic /test_bench/i_apb_if/pwrite
-add wave -noupdate -expand -group {APB Slave 11} -label paddr -format Literal -radix hexadecimal /test_bench/i_apb_if/paddr
-add wave -noupdate -expand -group {APB Slave 11} -label pwdata -format Literal -radix hexadecimal /test_bench/i_apb_if/pwdata
-add wave -noupdate -expand -group {APB Slave 11} -label prdata_11 -format Literal -radix hexadecimal /test_bench/i_apb_if/prdata_11
-add wave -noupdate -expand -group {APB Slave 11} -label pready_11 -format Logic /test_bench/i_apb_if/pready_11
-add wave -noupdate -expand -group {APB Slave 11} -label pslverr_11 -format Logic /test_bench/i_apb_if/pslverr_11
+add wave -noupdate -group {APB Slave 11} -label psel_11 -format Logic /test_bench/i_apb_if/psel_11
+add wave -noupdate -group {APB Slave 11} -label penable -format Logic /test_bench/i_apb_if/penable
+add wave -noupdate -group {APB Slave 11} -label pwrite -format Logic /test_bench/i_apb_if/pwrite
+add wave -noupdate -group {APB Slave 11} -label paddr -format Literal -radix hexadecimal /test_bench/i_apb_if/paddr
+add wave -noupdate -group {APB Slave 11} -label pwdata -format Literal -radix hexadecimal /test_bench/i_apb_if/pwdata
+add wave -noupdate -group {APB Slave 11} -label prdata_11 -format Literal -radix hexadecimal /test_bench/i_apb_if/prdata_11
+add wave -noupdate -group {APB Slave 11} -label pready_11 -format Logic /test_bench/i_apb_if/pready_11
+add wave -noupdate -group {APB Slave 11} -label pslverr_11 -format Logic /test_bench/i_apb_if/pslverr_11
 
 TreeUpdate [SetDefaultTree]
 configure wave -namecolwidth 169
