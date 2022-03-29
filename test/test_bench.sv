@@ -51,9 +51,11 @@ initial begin
 
     // one_read_trans_defalut();
 
-    // write_trans(.nums(5), .index(11), .max_delay(3));
+    // write_trans(.nums(5), .index(11), .max_delay(4));
 
-    read_trans(.nums(5), .index(11), .max_delay(4));
+    // read_trans(.nums(5), .index(11), .max_delay(4));
+
+    random_trans(.nums(10), .max_delay(10));
 
     $finish;
 end

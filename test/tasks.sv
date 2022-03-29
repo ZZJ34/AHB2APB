@@ -185,7 +185,7 @@ task apb_wait_psel(int index);
 endtask
 
 /*
-* name : transfer one write transaction with defalut set
+* name : transfer one write transaction with defalut setting
 *
 * description : A AHB bus write transaction to APB slave 0 without APB response delay
 * 
@@ -240,7 +240,7 @@ task one_write_trans_defalut();
 endtask
 
 /*
-* name : transfer one read transaction with default set
+* name : transfer one read transaction with default setting
 *
 * description :  A AHB bus read transaction to APB slave 0 without APB response delay
 */
@@ -440,4 +440,28 @@ task read_trans(int nums, int index, int max_delay);
     join
 
     #100;
+endtask
+
+/*
+* name : transfer random transactions 
+*
+* description :  AHB transactions to random APB slave with random setting.
+*                The quantity of transactions and max delay can be specified.
+*/
+task random_trans(int nums, int max_delay);
+    // TRANS list
+    trans_lits = new[nums];
+    // TRANS randomize
+    for (int i = 0 ; i < $size(trans_lits) ; i++) begin
+        TRANS trans_temp;
+        trans_temp = new(.dir({$random()}%2), .error({$random()}%2), .delay({$random()}%(max_delay+1)), .index({$random}%12));
+        initialize_trans:assert (trans_temp.randomize())
+            else $error("TRANS randomize failed!");
+        trans_lits[i] = trans_temp;
+
+        $display("%d",i);
+        trans_lits[i].display();
+    end
+
+    display_name("random_trans");
 endtask
