@@ -50,6 +50,8 @@ description : 实现基本功能
   
 ## 仿真测试
 
+测试环境：Modelsim/QuestaSim
+
 执行命令 `bash ./sim/vsim_rtl_bash.sh <task_name> <other_parameters>` 
 
 举例说明：
