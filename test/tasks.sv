@@ -184,6 +184,9 @@ task apb_wait_psel(int index);
         wait(i_apb_if.psel_11 == 1'b1);
 endtask
 
+
+
+
 /*
 * name : transfer one write transaction with defalut setting
 *
@@ -239,6 +242,10 @@ task one_write_trans_defalut();
 
 endtask
 
+
+
+
+
 /*
 * name : transfer one read transaction with default setting
 *
@@ -290,6 +297,9 @@ task one_read_trans_defalut();
 
     #100;
 endtask
+
+
+
 
 /*
 * name : transfer write transactions 
@@ -368,6 +378,9 @@ task write_trans(int nums, int index, int max_delay);
     #100;
 endtask
 
+
+
+
 /*
 * name : transfer read transactions 
 *
@@ -442,6 +455,9 @@ task read_trans(int nums, int index, int max_delay);
     #100;
 endtask
 
+
+
+
 /*
 * name : transfer random transactions 
 *
@@ -464,4 +480,62 @@ task random_trans(int nums, int max_delay);
     end
 
     display_name("random_trans");
+    
+    fork
+        // AHB master 
+        begin
+            ahb_begin();
+
+            for (int i = 0 ; i < $size(trans_lits) ; i++) begin
+                ahb_next();
+                i_apb_if.haddr  = trans_lits[i].addr;
+                i_apb_if.hwrite = trans_lits[i].dir;
+                i_apb_if.htrans = 2'b10;
+                if (i != 0 && trans_lits[i-1].dir == 1) begin
+                    i_apb_if.hwdata = trans_lits[i-1].data;
+                end
+            end
+
+            ahb_next();
+            i_apb_if.hwdata = trans_lits[$size(trans_lits)-1].data;
+            i_apb_if.htrans = 2'b00;
+
+            ahb_next();
+            i_apb_if.htrans = 2'bx;
+
+            ahb_end();
+        end
+
+        // APB slave
+        begin
+            
+            for (int i = 0 ; i < $size(trans_lits) ; i++) begin
+                apb_wait_psel(trans_lits[i].index);
+                wait(i_apb_if.penable == 1'b1);
+
+                apb_pready(trans_lits[i].index, 0);
+                apb_pslverr(trans_lits[i].index, 0);
+
+                repeat(trans_lits[i].delay) begin
+                    @(posedge i_apb_if.hclk);
+                end
+
+                apb_pready(trans_lits[i].index, 1);
+                apb_pslverr(trans_lits[i].index, trans_lits[i].error);
+                if (!trans_lits[i].dir) begin
+                    apb_prdata(trans_lits[i].index, trans_lits[i].data);
+                end
+            
+                @(posedge i_apb_if.hclk);
+                apb_pready(trans_lits[i].index, 0);
+                apb_pslverr(trans_lits[i].index, 0);
+
+                @(posedge i_apb_if.hclk);
+            end
+
+        end
+
+    join
+
+    #100;
 endtask

@@ -55,7 +55,7 @@ initial begin
 
     // read_trans(.nums(5), .index(11), .max_delay(4));
 
-    random_trans(.nums(10), .max_delay(10));
+    random_trans(.nums(5), .max_delay(5));
 
     $finish;
 end
