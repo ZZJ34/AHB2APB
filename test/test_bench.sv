@@ -12,6 +12,8 @@
 `include "./apb_if.sv"
 `include "./apb_top_wrapped.sv"
 
+`include "./par.sv"
+
 module test_bench();
 
 parameter PERIOD_CYCLE = 20 ;  // 20ns 50Mhz
@@ -47,15 +49,20 @@ end
 initial begin
     wait(i_apb_if.hreset_n == 1'b1);
 
-    // one_write_trans_defalut();
+    if (sim_test == "one_write_defalut")
+        one_write_trans_defalut();
 
-    // one_read_trans_defalut();
+    if (sim_test == "one_read_defalut")
+        one_read_trans_defalut();
 
-    // write_trans(.nums(5), .index(11), .max_delay(4));
+    if (sim_test == "write")
+        write_trans(.nums(nums), .index(index), .max_delay(max_delay));
 
-    // read_trans(.nums(5), .index(11), .max_delay(4));
-
-    random_trans(.nums(5), .max_delay(5));
+    if (sim_test == "read")
+        read_trans(.nums(nums), .index(index), .max_delay(max_delay));
+    
+    if (sim_test == "random")
+        random_trans(.nums(nums), .max_delay(max_delay));
 
     $finish;
 end
