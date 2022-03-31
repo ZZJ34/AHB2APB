@@ -15,8 +15,8 @@ module apb_top (
     input                         hsel,       // AHB slave select signal
     input  [`HTRANS_WIDTH-1:0]    htrans,     // AHB transfer type bus
     input                         hwrite,     // AHB write/read signal
-    input  [`HSIZE_WIDTH-1:0]     hsize,      // AHB transfer size        // 没用
-    input  [`HBURST_WIDTH -1:0]   hburst,     // AHB transfer burst type  // 没用
+    input  [`HSIZE_WIDTH-1:0]     hsize,      // AHB transfer size        
+    input  [`HBURST_WIDTH -1:0]   hburst,     // AHB transfer burst type
     output                        hresp,      // AHB response
     output                        hreadyout,  // AHB ready output
     input  [`AHB_DATA_WIDTH-1:0]  hwdata,     // AHB write data bus
@@ -104,8 +104,6 @@ wire                             pready_x;
 wire                             pslverr_x;
 // select APB slave prdata
 wire [`APB_DATA_WIDTH-1:0]       prdata_x;
-
-
 
 
 

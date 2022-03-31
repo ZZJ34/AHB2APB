@@ -33,11 +33,11 @@ module apb_ahb_if (
 );
 
 /* internal signal and reg */
-wire                        ahb_sel_idd;     // 当前确实被选中
-wire                        ahb_tran_idd;    // 当前传输 transaction 确实有效
-wire                        ahb_valid;       // 当前有效选中
+wire                        ahb_sel_idd;     
+wire                        ahb_tran_idd;   
+wire                        ahb_valid;   
 
-// 同名寄存器的 wire 类型
+// wire type of the reg with the same name
 wire [`HADDR_INT_WIDTH-1:0] piped_haddr_w;   
 wire [`AHB_DATA_WIDTH-1:0]  piped_hwdata_w;
 wire                        piped_hwrite_w;
@@ -47,15 +47,18 @@ wire                        penable_w;
 
 wire [`AHB_DATA_WIDTH-1:0]  prdata_reg_w;
 
-reg [`HADDR_INT_WIDTH-1:0]  piped_haddr;      // 存储 AHB 地址
-reg [`AHB_DATA_WIDTH-1:0]   piped_hwdata;     // 存储 AHB 写数据
-reg                         piped_hwrite;     // 存储 AHB 传输方向
- 
-reg [`AHB_DATA_WIDTH-1:0]   prdata_reg;       // 存储 APB 读取数据
+// store AHB address
+reg [`HADDR_INT_WIDTH-1:0]  piped_haddr;
+// store AHB write data     
+reg [`AHB_DATA_WIDTH-1:0]   piped_hwdata;
+// store AHB direction   
+reg                         piped_hwrite; 
+// store APB read data
+reg [`AHB_DATA_WIDTH-1:0]   prdata_reg;       
 
 
-reg [3:0]                   next_state;       // 下一状态寄存器
-reg [3:0]                   state;            // 当前状态寄存器
+reg [3:0]                   next_state;      
+reg [3:0]                   state;            
 
 /* FSM definition */
 parameter IDLE                = 4'b0000;
@@ -79,8 +82,12 @@ parameter ERROR_2             = 4'b1011;
 /* connection */
 
 /*
- * 1. 确定当前 AHB slave 被选中，并且其他 slave 的传输任务已完成
- * 2. 当条件1满足时，确定当前传输 transaction 的类型
+ * 1. Make sure that the current AHB slave is selected and 
+ *    the transfer tasks of other slaves have been completed
+ * 2. When condition 1 is satisfied, determine the type of the current transaction.
+ *    It should not be IDLE and BUSY.
+ * 3. When condition 2 is satisfied, is means that further responses can be made.
+ *
  */
 assign ahb_sel_idd  = hsel && hready;
 assign ahb_tran_idd = (htrans != `IDLE) && (htrans != `BUSY);
@@ -91,7 +98,7 @@ assign ahb_valid    = ahb_sel_idd && ahb_tran_idd;
 /* always block */
 
 /*
- * 保存 AHB 总线上的地址
+ * store the address of the AHB bus
  */
 assign piped_haddr_w = piped_haddr;
 always @(posedge hclk) begin
@@ -112,10 +119,12 @@ always @(posedge hclk) begin
 end
 
 /*
- * 保存 AHB 的传输方向
+ * store the direction of the AHB bus
  * 
- * 因为 AHB 的流水操作，传输方向的指明和地址保持同步，
- * 因此，传输方向和地址有着一致的采样时刻。 
+ * Because of the pipeline operation of AHB, the indication of 
+ * the transmission direction and the address are kept synchronized, 
+ * so the transmission direction and the address have the same sampling time.
+ * 
  */
 assign piped_hwrite_w = piped_hwrite;
 always @(posedge hclk) begin
@@ -135,10 +144,11 @@ always @(posedge hclk) begin
 end
 
 /*
- * 保存 AHB 总线上的写数据
+ * store the write data of the AHB bus
  *
- * 对于写入传输事务，只有得到完全的 AHB 总线信息(地址和数据)，
- * 才能在进入 APB 的 Setup 阶段。
+ * For write transfer, only when complete AHB bus information 
+ * (address and data) can be obtained, the Setup phase of APB bus can be entered.
+ * 
  */
 assign piped_hwdata_w = piped_hwdata;
 always @(posedge hclk) begin
@@ -153,9 +163,11 @@ always @(posedge hclk) begin
 end
 
 /*
-* AHB 总线 hreadyout
+* AHB bus hreadyout
 *
-* IDLE状态拉高，此外仅在读写成功完成以及错误响应的第二个周期拉高
+* assert on IDLE, and only on successful completion of read and write 
+* and the second cycle of error response.
+* 
 */
 always @(posedge hclk) begin
     if (hreset_n == 1'b0)
@@ -169,9 +181,10 @@ always @(posedge hclk) begin
 end
 
 /*
-* AHB 总线 hresp
+* AHB bus hresp
 *
-* 仅在错误响应时拉高
+* assert on cycles of error response.
+* 
 */
 always @(posedge hclk) begin
     if (hreset_n == 1'b0)
@@ -185,16 +198,16 @@ always @(posedge hclk) begin
 end
 
 /*
-* AHB 总线 hrdata
+* AHB bus hrdata
 */
 always @(*) begin
     hrdata = prdata_reg_w;
 end
 
 /*
-* APB 总线 psel_en
+* APB bus psel_en
 * 
-* APB 总线 setup phase 开始拉高，完成时拉低
+* assert when the APB bus enters the setup phase and deassert when finished.
 */
 assign psel_en_w = psel_en;
 always @(posedge hclk) begin
@@ -210,9 +223,9 @@ always @(posedge hclk) begin
 end
 
 /*
-* APB 总线 penable
+* APB bus penable
 * 
-* APB 总线 access phase 开始拉高，完成时拉低
+* assert when the APB bus enters the access phase and deassert when finished.
 */
 assign penable_w = penable;
 always @(posedge hclk) begin
@@ -228,7 +241,7 @@ always @(posedge hclk) begin
 end
 
 /*
-* APB 总线 prdata
+* APB bus prdata
 */
 assign prdata_reg_w = prdata_reg;
 always @(posedge hclk) begin
@@ -243,7 +256,7 @@ always @(posedge hclk) begin
 end
 
 /*
-* APB 总线 paddr，pwdata，pwrite
+* APB bus paddr，pwdata，pwrite
 */
 always @(*) begin
     paddr = piped_haddr_w;
@@ -253,7 +266,7 @@ end
 
 
 /* 
- * 状态机切换
+ * FSM switch
  */
 always @(posedge hclk) begin
     if (hreset_n == 1'b0) begin
@@ -266,31 +279,33 @@ end
 
 always @(*) begin
     case (state)
-        // 空闲状态，等待 AHB 总线唤醒
+        // IDLE state, waiting for AHB bus to wake up
         IDLE : begin
             if (ahb_valid == 1'b1) begin
-                // 接受当前的传输事务
+                // accept the current transfer
                 if ( hwrite == `WRITE)
-                    // 写入传输事务
+                    // write transfer
                     next_state = WRITE_WAIT_PIPLINE; 
                 else
-                    // 读取传输事务
+                    // read transfer
                     next_state = READ_SETUP;
             end
             else
                 next_state = IDLE;
         end
 
-        // 写传输（等待数据），获取 AHB 写事务的数据后 APB 总线进入到 setup phase
+        // write transfer (waiting for data), 
+        // after obtaining the data of the AHB write transfer, 
+        // the APB bus enters the setup phase
         WRITE_WAIT_PIPLINE : next_state = WRITE_SETUP;
 
-        // APB 总线写 setup phase
+        // APB write transfer setup phase
         WRITE_SETUP : next_state = WRITE_ENABLE;
     
-        // APB 总线写 enable phase
+        // APB write transfer enable phase
         WRITE_ENABLE : begin
             if (pready_x == 1'b0)
-                // APB 从设备未准备 
+                // APB slave not ready
                 next_state = WRITE_WAIT;
             else begin
                 if (pslverr_x == 1'b0)
@@ -300,10 +315,10 @@ always @(*) begin
             end
         end
 
-        // APB 总线写等待
+        // APB write transfer waiting
         WRITE_WAIT : begin
             if (pready_x == 1'b0)
-                // APB 从设备未准备 
+                // APB slave not ready
                 next_state = WRITE_WAIT;
             else begin
                 if (pslverr_x == 1'b0)
@@ -313,7 +328,7 @@ always @(*) begin
             end
         end
 
-        // APB 总线写完成
+        // APB write transfer finish
         WRITE_SUCCESS : begin
             if (ahb_valid == 1'b1) begin
                 if (hwrite == `WRITE)
@@ -325,13 +340,13 @@ always @(*) begin
                 next_state = IDLE;
         end
 
-        // APB 总线读 setup phase
+        // APB read transfer setup phase
         READ_SETUP : next_state = READ_ENABLE;
 
-        // APB 总线读 enable phase
+        // APB read transfer enable phase
         READ_ENABLE : begin
             if (pready_x == 1'b0)
-                // APB 从设备未准备 
+                // APB slave not ready 
                 next_state = READ_WAIT;
             else begin
                 if (pslverr_x == 1'b0)
@@ -341,10 +356,10 @@ always @(*) begin
             end
         end
 
-        // APB 总线读等待
+        // APB read transfer waiting
         READ_WAIT : begin
             if (pready_x == 1'b0)
-                // APB 从设备未准备 
+                // APB slave not ready 
                 next_state = READ_WAIT;
             else begin
                 if (pslverr_x == 1'b0)
@@ -354,7 +369,7 @@ always @(*) begin
             end
         end
 
-        // APB 总线读完成
+        // APB read transfer finish
         READ_SUCCESS : begin
             if (ahb_valid == 1'b1) begin
                 if (hwrite == `WRITE)
