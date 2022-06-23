@@ -184,17 +184,17 @@ apb_mux #(.DATA_WIDTH(`APB_DATA_WIDTH)) i_apb_mux_prdata (
 apb_mux #(.DATA_WIDTH(1)) i_apb_mux_pready (
     .sel(psel_int),    // internal APB psel
     .ch_0(pready_0),   // ready from APB slave #0 
-    .ch_1(pready_1),   // ready data from APB slave #1
-    .ch_2(pready_2),   // ready data from APB slave #2
-    .ch_3(pready_3),   // ready data from APB slave #3
-    .ch_4(pready_4),   // ready data from APB slave #4
-    .ch_5(pready_5),   // ready data from APB slave #5
-    .ch_6(pready_6),   // ready data from APB slave #6
-    .ch_7(pready_7),   // ready data from APB slave #7
-    .ch_8(pready_8),   // ready data from APB slave #8
-    .ch_9(pready_9),   // ready data from APB slave #9
-    .ch_10(pready_10), // ready data from APB slave #10
-    .ch_11(pready_11), // ready data from APB slave #11
+    .ch_1(pready_1),   // ready from APB slave #1
+    .ch_2(pready_2),   // ready from APB slave #2
+    .ch_3(pready_3),   // ready from APB slave #3
+    .ch_4(pready_4),   // ready from APB slave #4
+    .ch_5(pready_5),   // ready from APB slave #5
+    .ch_6(pready_6),   // ready from APB slave #6
+    .ch_7(pready_7),   // ready from APB slave #7
+    .ch_8(pready_8),   // ready from APB slave #8
+    .ch_9(pready_9),   // ready from APB slave #9
+    .ch_10(pready_10), // ready from APB slave #10
+    .ch_11(pready_11), // ready from APB slave #11
     .tc_ch(pready_x)
 );
 

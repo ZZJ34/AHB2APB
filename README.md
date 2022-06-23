@@ -52,33 +52,33 @@ description : 实现基本功能
 
 测试环境：Modelsim/QuestaSim
 
-执行命令 `bash ./sim/vsim_rtl_bash.sh <task_name> <other_parameters>` 
+在 `./sim` 中执行命令 `bash ./vsim_rtl_bash.sh <task_name> <other_parameters>` 
 
 举例说明：
 
 - 执行一次默认设置的写传输任务
   
-  `bash ./sim/vsim_rtl_bash.sh one_write_defalut` 
+  `bash ./vsim_rtl_bash.sh one_write_defalut` 
 
 - 执行一次默认设置的读传输任务
  
-  `bash ./sim/vsim_rtl_bash.sh one_read_defalut` 
+  `bash ./vsim_rtl_bash.sh one_read_defalut` 
 
 - 执行多次写传输任务，指定任务数量、APB 从设备的索引、APB 从设备响应最大延时
 
-  `bash ./sim/vsim_rtl_bash.sh write 20 5 3`
+  `bash ./vsim_rtl_bash.sh write 20 5 3`
 
   *注：该参数表示执行20次写任务，指定 APB 从设备的索引为5(范围0-11)，APB 从设备最大响应延时为3个时钟周期*
 
 - 执行多次读传输任务，指定任务数量、APB 从设备的索引、APB 从设备响应最大延时
 
-  `bash ./sim/vsim_rtl_bash.sh read 15 3 4`
+  `bash ./vsim_rtl_bash.sh read 15 3 4`
 
   *注：该参数表示执行15次写任务，指定 APB 从设备的索引为3(范围0-11)，APB 从设备最大响应延时为4个时钟周期*
 
 - 执行随机传输任务（随机 APB 从设备，随机读写方向），指定任务数量、APB 从设备响应最大延时
 
-  `bash ./sim/vsim_rtl_bash.sh random 30 5`
+  `bash ./vsim_rtl_bash.sh random 30 5`
 
   *注：该参数表示执行30次任务，APB 从设备最大响应延时为5个时钟周期*
 
